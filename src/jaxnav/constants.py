@@ -1,3 +1,4 @@
 DT = 0.1
 HORIZON = 60
 NUM_SAMPLES = 256
+LR = 0.01
