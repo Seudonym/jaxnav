@@ -30,3 +30,20 @@ def plot_fan(fan, state0, nominal):
     ax.grid(alpha=0.3)
     ax.legend()
     plt.show()
+
+
+def plot_optimization_result(state0, initial, controls, goal):
+    before = jnp.asarray(rollout(state0, initial))
+    after = jnp.asarray(rollout(state0, controls))
+    _, ax = plt.subplots(figsize=(7, 6))
+    ax.plot(before[:, 0], before[:, 1], "--", color="gray", label="initial guess")
+    ax.plot(after[:, 0], after[:, 1], lw=2, color="tab:green", label="optimized")
+    ax.scatter(*goal, marker="*", s=250, color="tab:red", zorder=3, label="goal")
+    ax.set_aspect("equal")
+    ax.set_xlabel("x (m)")
+    ax.set_ylabel("y (m)")
+    ax.set_title("Controls optimized with jax.grad")
+    ax.grid(alpha=0.3)
+    ax.legend()
+    plt.show()
+

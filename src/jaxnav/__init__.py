@@ -1,6 +1,6 @@
 from jaxnav.optim import cost
 from jaxnav.constants import HORIZON, NUM_SAMPLES, LR
-from jaxnav.plot import plot_unicycle_path, plot_fan
+from jaxnav.plot import plot_unicycle_path, plot_fan, plot_optimization_result
 from jaxnav.model import rollout
 import jax
 import jax.numpy as jnp
@@ -37,31 +37,15 @@ def main():
     # plot_fan(fan, state0, nominal)
     
     # optimization
-    cost_grad = jax.grad(cost, argnums=1)
     controls = jnp.tile(jnp.array([v, 0.0]), (HORIZON, 1))
     initial = controls
     goal = jnp.array([5.0, 5.0])
-
-    grad = cost_grad(state0, controls, goal)
-    print(f"grad shape: {grad.shape}")
+    cost_and_grad = jax.jit(jax.value_and_grad(cost, argnums=1))
 
     for i in range(50):
-        controls = controls - LR * cost_grad(state0, controls, goal)
+        c, g = cost_and_grad(state0, controls, goal)
+        controls = controls - LR * g
         if i % 10 == 0:
-            print(f"iter {i:2d}  cost {cost(state0, controls, goal):.4f}")
+            print(f"iter {i:2d}  cost {c:.4f}")
         
-
-    before = jnp.asarray(rollout(state0, initial))
-    after = jnp.asarray(rollout(state0, controls))
-    _, ax = plt.subplots(figsize=(7, 6))
-    ax.plot(before[:, 0], before[:, 1], "--", color="gray", label="initial guess")
-    ax.plot(after[:, 0], after[:, 1], lw=2, color="tab:green", label="optimized")
-    ax.scatter(*goal, marker="*", s=250, color="tab:red", zorder=3, label="goal")
-    ax.set_aspect("equal")
-    ax.set_xlabel("x (m)")
-    ax.set_ylabel("y (m)")
-    ax.set_title("Controls optimized with jax.grad")
-    ax.grid(alpha=0.3)
-    ax.legend()
-    plt.show()
-
+    plot_optimization_result(state0, initial, controls, goal)
