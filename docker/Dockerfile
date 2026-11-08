@@ -5,6 +5,12 @@ RUN apt-get update && apt-get install -y ros-humble-turtlebot3-* ros-humble-navi
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install dependencies
+RUN apt-get update && apt-get install -y python3-pip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir "jax[cuda13]"
 
 # Set environment variables
 ENV TURTLEBOT3_MODEL=burger
