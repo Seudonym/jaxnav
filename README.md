@@ -3,6 +3,7 @@
 Differentiable and sampling-based motion planning for a differential-drive robot, written in [JAX](https://github.com/jax-ml/jax). The repo goes from a unicycle model, to gradient-based trajectory optimization, to a GPU-accelerated MPPI controller that avoids obstacles on a TurtleBot3 in ROS 2. Its a test repo I used while learning JAX, so `src` is messy.
 
 ## Demo
+https://github.com/user-attachments/assets/a980e4d0-cf2b-42a9-8b44-5890e1ecd6f2
 
 TurtleBot3 (burger) navigating to a goal while avoiding obstacles using the MPPI controller in `ros2_ws/src/tb3_mppi`.
 MPPI, localization is running on the robot. The controller is running at 10Hz.
